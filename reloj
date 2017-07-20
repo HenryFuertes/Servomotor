@@ -1,0 +1,68 @@
+/*UNIVERSIDAD TÉCNICA DEL NORTE
+  FICA -CIERCOM
+  SISTEMAS MICROPROCESADOS
+  HENRY FUERTES*/
+  
+#include <Wire.h> 
+#include "RTClib.h"
+#include <LiquidCrystal.h>
+RTC_DS1307 RTC;
+LiquidCrystal lcd(3, 4, 5, 6, 7 , 8);
+int h=0;
+int mi=0;
+int seg=0;
+int led=12;
+
+
+void setup () {
+  
+    Serial.begin(9600);
+    Wire.begin();
+    RTC.begin();
+    
+  pinMode(salida,OUTPUT);
+ 
+  }
+  
+void loop () {
+    DateTime now = RTC.now();
+  h=(now.hour(),DEC);
+  mi=(now.minute(),DEC);
+  seg=(now.second(),DEC);
+   
+    //Imprimimos la hora
+    Serial.print(now.hour(), DEC);
+    Serial.print(':');
+    //Imprimimos los minutos
+    Serial.print(now.minute(), DEC);
+    Serial.print(':');
+    //Imprimimos los segundos
+    Serial.print(now.second(), DEC);
+    Serial.println();
+   
+  lcd.clear();   
+  lcd.setCursor(0,1);
+  lcd.print(now.hour(), DEC);
+  lcd.setCursor(2,1);
+  lcd.print(":");
+  lcd.setCursor(3,1);
+  lcd.print(now.minute(), DEC);
+  lcd.setCursor(5,1);
+  lcd.print(":");
+  lcd.setCursor(6,1);
+  lcd.print(now.second(), DEC);
+  lcd.setCursor(5,0);
+ 
+  
+  if (now.second()==3||now.second()==13||now.second()==23
+  ||now.second()>=30 && now.second()<=39
+  ||now.second()==43||now.second()==53)
+  {
+  
+  lcd.setCursor(2,0);
+  digitalWrite(salida,HIGH);
+  }
+  
+   delay(1000);
+ 
+}
